@@ -10,7 +10,8 @@ const {
   getBrands,
   addProduct,
   getProductById,
-  getProductByOrder
+  getProductByOrder,
+  getProductsByFilters
 } = require('../handler/productHandler');
 
 /**********CATEGORIES************* */
@@ -28,5 +29,8 @@ router.get('/article_by_id', getProductById);
 ///article?sortBy=createdAt&order=desc&limit=4
 ///article?sortBy=sold&order=desc&limit=4
 router.get('/articles', getProductByOrder);
+
+//api/product/shop
+router.post('/shop', getProductsByFilters);
 
 module.exports = router;

@@ -6,11 +6,10 @@ export function apiCall(method, path, data) {
       ? axios[method](path, data)
       : axios[method](path)
           .then(res => {
-            console.log(res.data);
             return resolve(res.data);
           })
           .catch(err => {
-            return reject(err.response.data.error);
+            return reject(err.response.data);
           });
   });
 }

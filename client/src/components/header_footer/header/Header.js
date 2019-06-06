@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { auth } from '../../../store/actions/userAction';
+import { Link, withRouter } from 'react-router-dom';
+import { auth, logOutUser } from '../../../store/actions/userAction';
 import { connect } from 'react-redux';
 class Header extends Component {
   state = {
@@ -60,11 +60,36 @@ class Header extends Component {
     this.props.auth();
     this.setState({ currentUser: this.props.user });
   }
-  defaultLink = (item, i) => (
-    <Link to={item.linkTo} key={i}>
-      {item.name}
-    </Link>
-  );
+
+  logOutHandler = () => {
+    this.props.logOutUser();
+    //TODO: check if the server cleared
+    this.props.history.push('/');
+  };
+  defaultLink = (item, i) =>
+    item.name === 'Log out' ? (
+      <div
+        className='log_out_link'
+        key={i}
+        onClick={() => this.logOutHandler()}
+      >
+        {item.name}
+      </div>
+    ) : (
+      <Link to={item.linkTo} key={i}>
+        {item.name}
+      </Link>
+    );
+
+  cartLink = (item, i) => {
+    const user = this.props.user;
+    return (
+      <div className='cart_link' key={i}>
+        <span>{user.cart ? user.cart.length : 0}</span>
+        <Link to={item.linkTo}>{item.name}</Link>
+      </div>
+    );
+  };
   showLinks = type => {
     let list = [];
     if (this.props.user) {
@@ -83,6 +108,8 @@ class Header extends Component {
     return list.map((item, i) => {
       if (item.name !== 'My Cart') {
         return this.defaultLink(item, i);
+      } else {
+        return this.cartLink(item, i);
       }
     });
   };
@@ -94,8 +121,8 @@ class Header extends Component {
             <div className='logo'>WAVES</div>
           </div>
           <div className='right'>
-            <div className='top'>{this.showLinks(this.state.page)}</div>
-            <div className='bottom'>{this.showLinks(this.state.user)}</div>
+            <div className='top'>{this.showLinks(this.state.user)}</div>
+            <div className='bottom'>{this.showLinks(this.state.page)}</div>
           </div>
         </div>
       </header>
@@ -108,5 +135,5 @@ const mapStateToprops = state => {
 
 export default connect(
   mapStateToprops,
-  { auth }
-)(Header);
+  { auth, logOutUser }
+)(withRouter(Header));

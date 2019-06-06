@@ -56,6 +56,46 @@ exports.getProductByOrder = async function(req, res, next) {
   }
 };
 
+exports.getProductsByFilters = async function(req, res, next) {
+  try {
+    let order = req.body.order ? req.body.order : 'desc';
+    let sortBy = req.body.sortBy ? req.body.sortBy : '_.id';
+    let limit = req.body.limit ? parseInt(req.body.limit) : 100;
+    let skip = parseInt(req.body.skip);
+    let findArgs = {};
+
+    for (let key in req.body.filters) {
+      if (req.body.filters[key].length > 0) {
+        if (key === 'price') {
+          console.log(req.body.filters[key][0]);
+          console.log(req.body.filters[key][1]);
+          findArgs[key] = {
+            $gte: req.body.filters[key][0],
+            $lte: req.body.filters[key][1]
+          };
+        } else {
+          findArgs[key] = req.body.filters[key];
+        }
+      }
+    }
+    let products = await db.Product.find(findArgs)
+      .populate('brand')
+      .populate('wood')
+      .sort([[sortBy, order]])
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      size: products.length,
+      articles: products
+    });
+  } catch (error) {
+    next({
+      status: 400,
+      error: error
+    });
+  }
+};
 /*********************************
  * CATEGORIES
  *****************************/

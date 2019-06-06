@@ -45,21 +45,21 @@ class Login extends Component {
         validationMessage: ''
       }
     },
-    user: {}
+    currentUser: {},
+    logInError: null
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.user !== prevState.user) {
-      const { user } = nextProps;
-      return { user: user };
+    if (nextProps.user !== prevState.currentUser || nextProps.error !== null) {
+      const { user, error } = nextProps;
+      return { currentUser: user, logInError: error };
     }
     return null;
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState) {
-    if (prevProps.currentUser !== this.props.currentUser) {
-      const user = this.props.currentUser;
-      console.log(user);
+    if (this.props.user !== prevState.currentUser) {
+      const { user } = this.props;
       return user;
     } else return null;
   }
@@ -72,11 +72,13 @@ class Login extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (snapshot !== null) {
       let currentUser = snapshot;
-      if (currentUser.success === true || currentUser.isAuthenticated) {
-        prevProps.history.push('/user/dashboard');
-      } else if (prevProps.error.isAuth === false) {
-        this.setState({ formError: true });
+      if (currentUser.isAuthenticated) {
+        this.props.history.push('/user/dashboard');
+      } else if (currentUser.success) {
+        this.props.history.push('/user/dashboard');
       }
+    } else if (this.props.error !== prevProps.error) {
+      this.setState({ formError: true });
     }
   }
   submitForm(event) {
@@ -85,8 +87,6 @@ class Login extends Component {
     let formIsValid = isFormValid(this.state.formdata, 'login');
     if (formIsValid) {
       this.props.logInUser(dataSubmit);
-    } else {
-      this.setState({ formError: true });
     }
   }
   updateForm(element) {
@@ -111,7 +111,7 @@ class Login extends Component {
             change={element => this.updateForm(element)}
           />
           {this.state.formError ? (
-            <div className='error_label'>Please check your data</div>
+            <div className='error_label'>{this.props.error.message}</div>
           ) : null}
           <button onClick={event => this.submitForm(event)}>LogIn</button>
         </form>
@@ -121,7 +121,8 @@ class Login extends Component {
 }
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    error: state.error
   };
 };
 export default connect(

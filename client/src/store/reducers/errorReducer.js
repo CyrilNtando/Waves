@@ -1,18 +1,16 @@
 import { ADD_ERROR, REMOVE_ERROR } from '../actions/actionTypes';
-const ERROR_STATE = {
-  error: null
-};
-export default function(state = ERROR_STATE, action) {
+
+export default function(state = {}, action) {
   switch (action.type) {
     case ADD_ERROR:
       return {
         ...state,
-        error: action.payload
+        ...action.payload
       };
     case REMOVE_ERROR:
       return {
         ...state,
-        error: null
+        ...action.payload
       };
 
     default:

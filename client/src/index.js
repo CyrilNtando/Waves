@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './Resources/css/styles.css';
-
-import Routes from './Routes';
-
+import App from './App';
 import * as serviceWorker from './serviceWorker';
-
-ReactDOM.render(<Routes />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
 serviceWorker.unregister();
