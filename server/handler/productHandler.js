@@ -78,6 +78,8 @@ exports.getProductsByFilters = async function(req, res, next) {
         }
       }
     }
+
+    findArgs['publish'] = true;
     let products = await db.Product.find(findArgs)
       .populate('brand')
       .populate('wood')

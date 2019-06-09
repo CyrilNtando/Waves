@@ -3,7 +3,7 @@ import UserLayout from '../../hoc/UserLayout';
 import Button from '../utils/Button';
 function UserDashboard({ user }) {
   return (
-    <UserLayout>
+    <UserLayout isAdmin={user.isAdmin}>
       <div>
         <div className='user_nfo_panel'>
           <h1>User Infomartion</h1>

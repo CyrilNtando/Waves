@@ -1,5 +1,11 @@
 const db = require('../model');
-
+//get cloudinary
+const cloudinary = require('cloudinary');
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET
+});
 exports.signIn = async function(req, res, next) {
   console.log('pass0');
   try {
@@ -68,6 +74,41 @@ exports.getAuthUser = async function(req, res, next) {
   }
 };
 
+exports.uploadImage = async function(req, res, next) {
+  try {
+    cloudinary.uploader.upload(
+      req.files.file.path,
+      result => {
+        console.log(result);
+        res.status(200).send({
+          public_id: result.public_id,
+          url: result.url
+        });
+      },
+      {
+        public_id: `${Date.now()}`,
+        resource_type: 'auto'
+      }
+    );
+  } catch (error) {}
+};
+
+exports.removeImage = async function(req, res, next) {
+  try {
+    let image_id = req.query.public_id;
+    await cloudinary.v2.uploader.destroy(image_id, (err, result) => {
+      if (err) {
+        return next({
+          success: false
+        });
+      } else {
+        return res.status(200).json({
+          success: true
+        });
+      }
+    });
+  } catch (error) {}
+};
 exports.signOut = async function(req, res, next) {
   try {
     let user = await db.User.findOneAndUpdate(

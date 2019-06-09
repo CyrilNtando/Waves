@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PageTop from '../utils/PageTop';
 import LoadMoreCards from './LoadMoreCards';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faBars from '@fortawesome/fontawesome-free-solid/faBars';
+import faTh from '@fortawesome/fontawesome-free-solid/faTh';
 import {
   getBrands,
   getWoods,
@@ -80,8 +83,26 @@ class Shop extends Component {
     this.props.getProductToShop(0, this.state.limit, filters);
     this.setState({ skip: 0 });
   };
+
+  loadMoreCards = () => {
+    let skip = this.state.skip + this.state.limit;
+    this.props.getProductToShop(
+      skip,
+      this.state.limit,
+      this.state.filters,
+      this.props.products.toShop
+    );
+    this.setState({
+      skip
+    });
+  };
+
+  handleGrid = () => {
+    this.setState({
+      grid: !this.state.grid ? 'grid_bars' : ''
+    });
+  };
   render() {
-    console.log(this.state.filters);
     const { brands, woods } = this.state;
     return (
       <div>
@@ -117,15 +138,29 @@ class Shop extends Component {
 
             <div className='right'>
               <div className='shop_options'>
-                <div className='shop_grids clear'>grids</div>
+                <div className='shop_grids clear'>
+                  <div
+                    className={`grid_btn ${this.state.grid ? '' : 'active'}`}
+                    onClick={() => this.handleGrid()}
+                  >
+                    <FontAwesomeIcon icon={faTh} />
+                  </div>
+                  <div
+                    className={`grid_btn ${!this.state.grid ? '' : 'active'}`}
+                    onClick={() => this.handleGrid()}
+                  >
+                    <FontAwesomeIcon icon={faBars} />
+                  </div>
+                </div>
               </div>
+
               <div className=''>
                 <LoadMoreCards
                   grid={this.state.grid}
                   limit={this.state.limit}
                   size={this.props.products.toShopSize}
                   products={this.props.products.toShop}
-                  loadMore={() => console.log('LoadMore')}
+                  loadMore={() => this.loadMoreCards()}
                 />
               </div>
             </div>

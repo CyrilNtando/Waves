@@ -8,6 +8,7 @@ import RegisterLogin from './components/register-login/Auth';
 import Register from './components/register-login/Register';
 import Shop from './components/shop/Shop';
 import UserDashboard from './components/User/UserDashboard';
+import AddProduct from './components/User/Admin/AddProduct';
 import withAuth from './hoc/withAuth';
 
 const Routes = props => {
@@ -20,6 +21,11 @@ const Routes = props => {
           path='/user/dashboard'
           exact
           component={withAuth(UserDashboard, true)}
+        />
+        <Route
+          path='/admin/add_product'
+          exact
+          component={withAuth(AddProduct, true)}
         />
         <Route path='/register' exact component={withAuth(Register, false)} />
         <Route

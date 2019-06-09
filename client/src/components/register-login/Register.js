@@ -116,6 +116,13 @@ class Register extends Component {
     let formIsValid = isFormValid(this.state.formdata, 'register');
     if (formIsValid) {
       this.props.registerUser(dataSubmit);
+      this.setState({
+        formError: false,
+        formSuccess: true
+      });
+      setTimeout(() => {
+        this.props.history.push('/register_login');
+      }, 3000);
     } else {
       this.setState({ formError: true });
     }

@@ -4,8 +4,11 @@ import {
   GET_PRODUCT_BY_SELL,
   GET_BRANDS,
   GET_WOODS,
-  GET_PRODUCTS_TO_SHOP
+  GET_PRODUCTS_TO_SHOP,
+  ADD_PRODUCT,
+  CLEAR_PRODUCT
 } from './actionTypes';
+import { addError } from './errorAction';
 import { PRODUCT_SERVER } from '../../components/utils/misc';
 
 export function getProductBySell(dispatch) {
@@ -34,7 +37,7 @@ export function getProductByArrival() {
   };
 }
 
-export function getProductToShop(skip, limit, filters = [], previousSate) {
+export function getProductToShop(skip, limit, filters = [], previousSate = []) {
   const data = {
     limit,
     skip,
@@ -44,15 +47,41 @@ export function getProductToShop(skip, limit, filters = [], previousSate) {
     axios
       .post(`${PRODUCT_SERVER}/shop`, data)
       .then(response => {
+        let newState = [...previousSate, ...response.data.articles];
         dispatch({
           type: GET_PRODUCTS_TO_SHOP,
-          payload: response.data
+          payload: {
+            articles: newState,
+            size: response.data.size
+          }
         });
       })
       .catch(error => console.log(error));
   };
 }
 
+export function addProduct(dataToSubmit) {
+  return dispatch => {
+    axios
+      .post(`${PRODUCT_SERVER}/article`, dataToSubmit)
+      .then(response => {
+        dispatch({
+          type: ADD_PRODUCT,
+          payload: response.data
+        });
+      })
+      .catch(error => {
+        dispatch(addError(error.response.data));
+      });
+  };
+}
+
+export function clearProduct() {
+  return {
+    type: CLEAR_PRODUCT,
+    payload: ''
+  };
+}
 /*****************
  * CATEGORIES
  * ************** */

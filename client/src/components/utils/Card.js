@@ -21,7 +21,7 @@ class Card extends Component {
   }
   render() {
     return !!Object.keys(this.state.product).length > 0 ? (
-      <div className={`card_item_wrapper ${this.state.product.grid}`}>
+      <div className={`card_item_wrapper ${this.props.grid}`}>
         <div
           className='image'
           style={{
@@ -36,11 +36,9 @@ class Card extends Component {
             <div className='name'>{this.state.product.name}</div>
             <div className='name'>{'R' + this.state.product.price}</div>
           </div>
-          {this.state.product.grid ? (
+          {this.props.grid ? (
             <div className='description'>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. In
-              quibusdam quas dolorem consectetur aliquam error minima, libero
-              dolore placeat cumque vitae ex architecto
+              <p>{this.state.product.description}</p>
             </div>
           ) : null}
           <div className='actions'>

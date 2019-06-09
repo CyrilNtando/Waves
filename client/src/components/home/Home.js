@@ -21,7 +21,6 @@ class Home extends Component {
           list={this.props.products.bySell ? this.props.products.bySell : []}
           title='Best Selling Guitars'
         />
-        {console.log(this.props.products.bysell)}
         <HomePromotion />
         <CardBlock
           list={
@@ -34,7 +33,6 @@ class Home extends Component {
   }
 }
 const mapStateTopProps = state => {
-  console.log(state.products);
   return {
     products: state.products
   };
