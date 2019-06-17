@@ -25,8 +25,10 @@ app.use(cookiesParser());
  *  ******************************************************/
 const user = require('./routes/usersRoutes');
 const product = require('./routes/productsRoutes');
+const site = require('./routes/SiteRoutes');
 app.use('/api/users', user);
 app.use('/api/product', product);
+app.use('/api/site', site);
 /*******************************************************
  * DEFAULT ERROR
  *  ******************************************************/

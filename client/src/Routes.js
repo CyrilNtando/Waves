@@ -14,6 +14,7 @@ import ProductPage from './components/Product/ProductPage';
 import withAuth from './hoc/withAuth';
 import UserCart from './components/User/UserCart';
 import UserProfile from './components/User/UserProfile';
+import ManageSite from './components/User/Admin/ManageSite';
 const Routes = props => {
   return (
     <Layout>
@@ -45,6 +46,11 @@ const Routes = props => {
           path='/admin/manage_categories'
           exact
           component={withAuth(ManageCategories, true)}
+        />
+        <Route
+          path='/admin/site_info'
+          exact
+          component={withAuth(ManageSite, true)}
         />
 
         <Route path='/register' exact component={withAuth(Register, false)} />
