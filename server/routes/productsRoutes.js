@@ -25,7 +25,7 @@ router.get('/woods', getWoods);
 //api/product/article
 router.post('/article', ensureUser, admin, addProduct);
 //api/product/article_by_id?id=5b2d38217d75e2cdcb31cf05&type=single
-router.get('/article_by_id', getProductById);
+router.get('/articles_by_id', getProductById);
 ///article?sortBy=createdAt&order=desc&limit=4
 ///article?sortBy=sold&order=desc&limit=4
 router.get('/articles', getProductByOrder);

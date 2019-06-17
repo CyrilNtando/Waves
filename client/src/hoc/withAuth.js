@@ -6,54 +6,29 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 export default function(ComposedClass, reload, adminRoute = null) {
   class AuthenticationCheck extends Component {
     state = {
-      loading: true,
-      user: {}
+      loading: true
     };
-    static getDerivedStateFromProps(nextProps, prevState) {
-      return {
-        user: nextProps.user !== prevState.user ? nextProps.user : null
-      };
-    }
 
     componentDidMount() {
-      this.props.auth();
-      this.setState({
-        loading: false,
-        user: this.props.user
-      });
-      this.AutherizeRoutes();
-    }
-
-    componentDidUpdate() {
-      if (this.props.user !== this.state.user) {
-        this.setState({
-          loading: false,
-          user: this.props.user
-        });
-        this.AutherizeRoutes();
-      }
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-      return this.props.user !== nextProps.user;
-    }
-    AutherizeRoutes() {
-      let { user } = this.state;
-      if (!user.isAuthenticated) {
-        if (reload) {
-          this.props.history.push('/register_login');
-        }
-      } else {
-        if (adminRoute && !user.isAdmin) {
-          this.props.history.push('/user/dashboard');
+      this.props.auth().then(res => {
+        let { user } = this.props;
+        if (!user.isAuthenticated) {
+          if (reload) {
+            this.props.history.push('/register_login');
+          }
         } else {
-          if (reload === false) {
+          if (adminRoute && !user.isAdmin) {
             this.props.history.push('/user/dashboard');
+          } else {
+            if (reload === false) {
+              this.props.history.push('/user/dashboard');
+            }
           }
         }
-      }
-      this.setState({ loading: false });
+        this.setState({ loading: false });
+      });
     }
+
     render() {
       if (this.state.loading) {
         return (

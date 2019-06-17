@@ -16,3 +16,4 @@ module.exports.User = require('./User');
 module.exports.Brand = require('./Brand');
 module.exports.Wood = require('./Wood');
 module.exports.Product = require('./Product');
+module.exports.Payment = require('./Payment');
